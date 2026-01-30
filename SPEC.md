@@ -54,6 +54,42 @@ A single-family, multi-kid web app to track tasks, milestones, allowance, and sp
 - Use local persistence so the app is functional offline.
 - Sync across devices when online (conflict resolution: latest timestamp wins).
 
+## Tech Stack Options
+### Option A: React + Vite + PWA
+- **Frontend**: React + TypeScript + Vite.
+- **State**: Zustand or Redux Toolkit.
+- **Offline**: Workbox for PWA service worker + IndexedDB (Dexie).
+- **Sync**: Hosted API (Node/Express) + Postgres, or serverless functions.
+- **Pros**: Fast dev, large ecosystem, solid offline tooling.
+
+### Option B: Next.js (App Router) + PWA
+- **Frontend**: Next.js + TypeScript.
+- **State**: React context or Zustand.
+- **Offline**: next-pwa + IndexedDB (Dexie).
+- **Sync**: Next.js API routes + Postgres.
+- **Pros**: Full-stack in one repo, SSR optional, good for future growth.
+
+### Option C: SvelteKit + PWA
+- **Frontend**: SvelteKit + TypeScript.
+- **State**: Svelte stores.
+- **Offline**: Service worker + IndexedDB.
+- **Sync**: SvelteKit endpoints + Postgres.
+- **Pros**: Lean bundles, simple state model, good UX.
+
+### Option D: Vue 3 + Vite + PWA
+- **Frontend**: Vue 3 + TypeScript + Vite.
+- **State**: Pinia.
+- **Offline**: Vite PWA plugin + IndexedDB.
+- **Sync**: Node/Express + Postgres.
+- **Pros**: Strong DX, approachable templates, robust PWA support.
+
+### Option E: Flutter Web (PWA)
+- **Frontend**: Flutter Web.
+- **State**: Riverpod or Provider.
+- **Offline**: PWA + local storage/IndexedDB.
+- **Sync**: Backend API + Postgres.
+- **Pros**: Single codebase if mobile apps are planned later.
+
 ## Out of Scope (for MVP)
 - Formal authentication.
 - Multi-family support.
