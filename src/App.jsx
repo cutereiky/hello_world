@@ -10,32 +10,36 @@ export default function App() {
   const [activePage, setActivePage] = useState(PAGES.home);
 
   return (
-    <main className="app">
-      <header className="header panel">
-        <p className="eyebrow">Learning App</p>
-        <h1>學習練習中心</h1>
-        <p className="subtitle">把不同功能放在不同子頁面，避免整個 App 架構被單一功能覆蓋。</p>
+    <main className={activePage === PAGES.handwriting ? "app app--practice" : "app"}>
+      {activePage === PAGES.home ? (
+        <header className="header panel">
+          <p className="eyebrow">Learning App</p>
+          <h1>學習練習中心</h1>
+          <p className="subtitle">把不同功能放在不同子頁面，避免整個 App 架構被單一功能覆蓋。</p>
 
-        <nav className="tab-row" aria-label="Main navigation">
-          <button
-            type="button"
-            className={activePage === PAGES.home ? "tab active" : "tab"}
-            onClick={() => setActivePage(PAGES.home)}
-          >
-            首頁
-          </button>
-          <button
-            type="button"
-            className={activePage === PAGES.handwriting ? "tab active" : "tab"}
-            onClick={() => setActivePage(PAGES.handwriting)}
-          >
-            手寫練習
-          </button>
-        </nav>
-      </header>
+          <nav className="tab-row" aria-label="Main navigation">
+            <button
+              type="button"
+              className={activePage === PAGES.home ? "tab active" : "tab"}
+              onClick={() => setActivePage(PAGES.home)}
+            >
+              首頁
+            </button>
+            <button
+              type="button"
+              className={activePage === PAGES.handwriting ? "tab active" : "tab"}
+              onClick={() => setActivePage(PAGES.handwriting)}
+            >
+              手寫練習
+            </button>
+          </nav>
+        </header>
+      ) : null}
 
       {activePage === PAGES.home ? <HomePage onStart={() => setActivePage(PAGES.handwriting)} /> : null}
-      {activePage === PAGES.handwriting ? <HandwritingPracticePage /> : null}
+      {activePage === PAGES.handwriting ? (
+        <HandwritingPracticePage onBack={() => setActivePage(PAGES.home)} />
+      ) : null}
     </main>
   );
 }
