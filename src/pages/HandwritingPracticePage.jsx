@@ -46,6 +46,7 @@ export default function HandwritingPracticePage() {
 
   const canvasRef = useRef(null);
   const drawingRef = useRef(false);
+  const pointerIdRef = useRef(null);
 
   const hintWord = WORD_HINTS[letter];
 
@@ -60,9 +61,14 @@ export default function HandwritingPracticePage() {
   }, [letter]);
 
   const startDraw = (event) => {
+    event.preventDefault();
+
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     const rect = canvas.getBoundingClientRect();
+
+    canvas.setPointerCapture(event.pointerId);
+    pointerIdRef.current = event.pointerId;
 
     const x = clamp(event.clientX - rect.left, 0, rect.width);
     const y = clamp(event.clientY - rect.top, 0, rect.height);
@@ -78,6 +84,12 @@ export default function HandwritingPracticePage() {
   const endDraw = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
+
+    if (pointerIdRef.current !== null && canvas.hasPointerCapture(pointerIdRef.current)) {
+      canvas.releasePointerCapture(pointerIdRef.current);
+    }
+
+    pointerIdRef.current = null;
     drawingRef.current = false;
     context.beginPath();
   };
@@ -86,6 +98,8 @@ export default function HandwritingPracticePage() {
     if (!drawingRef.current) {
       return;
     }
+
+    event.preventDefault();
 
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
@@ -214,6 +228,7 @@ export default function HandwritingPracticePage() {
           onPointerMove={drawStroke}
           onPointerUp={endDraw}
           onPointerLeave={endDraw}
+          onPointerCancel={endDraw}
         />
 
         {score && (
