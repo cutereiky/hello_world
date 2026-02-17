@@ -1,5 +1,6 @@
 :root {
-  font-family: "Inter", "Noto Sans TC", system-ui, sans-serif;
+  font-family: "Comic Sans MS", "Bradley Hand", "Segoe Print", "Chalkboard SE",
+    "Noto Sans TC", system-ui, sans-serif;
   color: #1a2942;
   background: #eef3ff;
 }
@@ -19,6 +20,12 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.app--practice {
+  max-width: none;
+  width: 100%;
+  min-height: 100vh;
 }
 
 .header h1 {
@@ -74,7 +81,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex: 1;
 }
+
 
 .controls {
   display: grid;
@@ -128,13 +137,26 @@ button.ghost {
 }
 
 .practice-canvas {
-  margin-top: 14px;
   width: 100%;
+  height: 100%;
   border-radius: 12px;
   border: 2px solid #d8e0f2;
   background: #fff;
   touch-action: none;
   cursor: crosshair;
+}
+
+.practice-sheet {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 60vh;
+}
+
+.practice-sheet-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
 }
 
 .score {
