@@ -48,6 +48,9 @@ export default function HandwritingPracticePage() {
   const drawingRef = useRef(false);
   const pointerIdRef = useRef(null);
   const originalBodyUserSelectRef = useRef("");
+  const originalHtmlUserSelectRef = useRef("");
+  const originalBodyWebkitUserSelectRef = useRef("");
+  const originalHtmlWebkitUserSelectRef = useRef("");
 
   const hintWord = WORD_HINTS[letter];
 
@@ -63,6 +66,10 @@ export default function HandwritingPracticePage() {
 
   useEffect(() => () => {
     document.body.style.userSelect = originalBodyUserSelectRef.current;
+    document.documentElement.style.userSelect = originalHtmlUserSelectRef.current;
+    document.body.style.webkitUserSelect = originalBodyWebkitUserSelectRef.current;
+    document.documentElement.style.webkitUserSelect =
+      originalHtmlWebkitUserSelectRef.current;
   }, []);
 
   const startDraw = (event) => {
@@ -76,7 +83,15 @@ export default function HandwritingPracticePage() {
     pointerIdRef.current = event.pointerId;
 
     originalBodyUserSelectRef.current = document.body.style.userSelect;
+    originalHtmlUserSelectRef.current = document.documentElement.style.userSelect;
+    originalBodyWebkitUserSelectRef.current = document.body.style.webkitUserSelect;
+    originalHtmlWebkitUserSelectRef.current =
+      document.documentElement.style.webkitUserSelect;
+
     document.body.style.userSelect = "none";
+    document.documentElement.style.userSelect = "none";
+    document.body.style.webkitUserSelect = "none";
+    document.documentElement.style.webkitUserSelect = "none";
 
     if (window.getSelection) {
       window.getSelection().removeAllRanges();
@@ -112,6 +127,10 @@ export default function HandwritingPracticePage() {
     pointerIdRef.current = null;
     drawingRef.current = false;
     document.body.style.userSelect = originalBodyUserSelectRef.current;
+    document.documentElement.style.userSelect = originalHtmlUserSelectRef.current;
+    document.body.style.webkitUserSelect = originalBodyWebkitUserSelectRef.current;
+    document.documentElement.style.webkitUserSelect =
+      originalHtmlWebkitUserSelectRef.current;
     context.beginPath();
   };
 
@@ -124,7 +143,7 @@ export default function HandwritingPracticePage() {
       return;
     }
 
-    if (event.buttons === 0) {
+    if (event.pointerType === "mouse" && event.buttons === 0) {
       endDraw(event);
       return;
     }
