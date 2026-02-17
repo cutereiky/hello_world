@@ -1,5 +1,11 @@
-const CACHE_NAME = "kid-rewards-cache-v1";
-const CORE_ASSETS = ["/", "/index.html"];
+const CACHE_NAME = "kid-rewards-cache-v2";
+
+const scopeUrl = new URL(self.registration.scope);
+const basePath = scopeUrl.pathname.endsWith("/")
+  ? scopeUrl.pathname
+  : `${scopeUrl.pathname}/`;
+
+const CORE_ASSETS = [basePath, `${basePath}index.html`];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

@@ -1,162 +1,56 @@
 import { useState } from "react";
+import HandwritingPracticePage from "./pages/HandwritingPracticePage.jsx";
 
-const kids = [
-  { id: "kid-1", name: "Mia", balance: 18.5 },
-  { id: "kid-2", name: "Leo", balance: 12.0 },
-];
-
-const tasks = [
-  {
-    id: "task-1",
-    title: "Morning routine",
-    checkpoint: "Once a day",
-    status: "In progress",
-    due: "Today, 8:00 AM",
-  },
-  {
-    id: "task-2",
-    title: "Math practice",
-    checkpoint: "Twice a week",
-    status: "Next checkpoint",
-    due: "Tomorrow, 4:00 PM",
-  },
-];
-
-const ledger = [
-  {
-    id: "entry-1",
-    label: "Weekly allowance",
-    amount: 5,
-    time: "Sat, 9:00 AM",
-  },
-  {
-    id: "entry-2",
-    label: "Snack spending",
-    amount: -2.5,
-    time: "Fri, 4:30 PM",
-  },
-];
+const PAGES = {
+  home: "home",
+  handwriting: "handwriting",
+};
 
 export default function App() {
-  const [mode, setMode] = useState("parent");
-  const [activeKid, setActiveKid] = useState(kids[0].id);
-
-  const selectedKid = kids.find((kid) => kid.id === activeKid);
+  const [activePage, setActivePage] = useState(PAGES.home);
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <div>
-          <p className="eyebrow">Kid Rewards</p>
-          <h1>Offline-first family tracker</h1>
-        </div>
-        <button
-          type="button"
-          className="switch"
-          onClick={() =>
-            setMode((current) => (current === "parent" ? "kid" : "parent"))
-          }
-        >
-          Switch to {mode === "parent" ? "Kid" : "Parent"} View
-        </button>
+    <main className="app">
+      <header className="header panel">
+        <p className="eyebrow">Learning App</p>
+        <h1>學習練習中心</h1>
+        <p className="subtitle">把不同功能放在不同子頁面，避免整個 App 架構被單一功能覆蓋。</p>
+
+        <nav className="tab-row" aria-label="Main navigation">
+          <button
+            type="button"
+            className={activePage === PAGES.home ? "tab active" : "tab"}
+            onClick={() => setActivePage(PAGES.home)}
+          >
+            首頁
+          </button>
+          <button
+            type="button"
+            className={activePage === PAGES.handwriting ? "tab active" : "tab"}
+            onClick={() => setActivePage(PAGES.handwriting)}
+          >
+            手寫練習
+          </button>
+        </nav>
       </header>
 
-      <section className="panel">
-        <div className="panel-header">
-          <h2>{mode === "parent" ? "Parent overview" : "Kid view"}</h2>
-          <div className="pill">{mode === "parent" ? "Parent" : "Kid"}</div>
-        </div>
-        <div className="panel-body">
-          <label className="field">
-            <span>Active kid</span>
-            <select
-              value={activeKid}
-              onChange={(event) => setActiveKid(event.target.value)}
-            >
-              {kids.map((kid) => (
-                <option key={kid.id} value={kid.id}>
-                  {kid.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <div className="balance-card">
-            <div>
-              <p className="eyebrow">Balance</p>
-              <h3>${selectedKid.balance.toFixed(2)}</h3>
-            </div>
-            <button type="button" className="ghost">
-              Log spending
-            </button>
-          </div>
-        </div>
-      </section>
+      {activePage === PAGES.home ? <HomePage onStart={() => setActivePage(PAGES.handwriting)} /> : null}
+      {activePage === PAGES.handwriting ? <HandwritingPracticePage /> : null}
+    </main>
+  );
+}
 
-      <section className="grid">
-        <div className="panel">
-          <div className="panel-header">
-            <h2>Task checkpoints</h2>
-            <button type="button" className="ghost">
-              Add task
-            </button>
-          </div>
-          <ul className="list">
-            {tasks.map((task) => (
-              <li key={task.id} className="list-item">
-                <div>
-                  <p className="item-title">{task.title}</p>
-                  <p className="item-subtitle">
-                    {task.checkpoint} · {task.due}
-                  </p>
-                </div>
-                <span className="tag">{task.status}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="panel">
-          <div className="panel-header">
-            <h2>AI progress check-in</h2>
-            <span className="tag accent">Daily</span>
-          </div>
-          <div className="ai-card">
-            <p className="item-title">Tonight at 7:30 PM</p>
-            <p className="item-subtitle">
-              Review checkpoints and confirm completed tasks. You can work
-              offline — updates sync later.
-            </p>
-            <div className="button-row">
-              <button type="button">Start check-in</button>
-              <button type="button" className="ghost">
-                Snooze
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="panel">
-        <div className="panel-header">
-          <h2>Ledger</h2>
-          <button type="button" className="ghost">
-            Add entry
-          </button>
-        </div>
-        <ul className="list">
-          {ledger.map((entry) => (
-            <li key={entry.id} className="list-item">
-              <div>
-                <p className="item-title">{entry.label}</p>
-                <p className="item-subtitle">{entry.time}</p>
-              </div>
-              <span className={entry.amount < 0 ? "amount down" : "amount up"}>
-                {entry.amount < 0 ? "-" : "+"}${Math.abs(entry.amount).toFixed(2)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </div>
+function HomePage({ onStart }) {
+  return (
+    <section className="panel home-page">
+      <h2>首頁</h2>
+      <p>
+        這裡保留主應用入口，手寫英文字練習已被拆分為獨立子頁面。
+        你可以從這裡進入練習，不需要把整個 WebApp 都替換掉。
+      </p>
+      <button type="button" onClick={onStart}>
+        進入手寫練習
+      </button>
+    </section>
   );
 }
