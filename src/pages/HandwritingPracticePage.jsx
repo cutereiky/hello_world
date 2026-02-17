@@ -257,6 +257,7 @@ export default function HandwritingPracticePage() {
           onPointerDown={startDraw}
           onPointerMove={drawStroke}
           onPointerUp={endDraw}
+          onPointerLeave={endDraw}
           onPointerCancel={endDraw}
         />
 
