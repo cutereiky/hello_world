@@ -47,6 +47,7 @@ export default function HandwritingPracticePage() {
   const canvasRef = useRef(null);
   const drawingRef = useRef(false);
   const pointerIdRef = useRef(null);
+  const originalBodyUserSelectRef = useRef("");
 
   const hintWord = WORD_HINTS[letter];
 
@@ -60,6 +61,10 @@ export default function HandwritingPracticePage() {
     setScore(null);
   }, [letter]);
 
+  useEffect(() => () => {
+    document.body.style.userSelect = originalBodyUserSelectRef.current;
+  }, []);
+
   const startDraw = (event) => {
     event.preventDefault();
 
@@ -69,6 +74,13 @@ export default function HandwritingPracticePage() {
 
     canvas.setPointerCapture(event.pointerId);
     pointerIdRef.current = event.pointerId;
+
+    originalBodyUserSelectRef.current = document.body.style.userSelect;
+    document.body.style.userSelect = "none";
+
+    if (window.getSelection) {
+      window.getSelection().removeAllRanges();
+    }
 
     const x = clamp(event.clientX - rect.left, 0, rect.width);
     const y = clamp(event.clientY - rect.top, 0, rect.height);
@@ -81,7 +93,15 @@ export default function HandwritingPracticePage() {
     context.moveTo(normalizedX, normalizedY);
   };
 
-  const endDraw = () => {
+  const endDraw = (event) => {
+    if (event) {
+      event.preventDefault();
+
+      if (pointerIdRef.current !== null && event.pointerId !== pointerIdRef.current) {
+        return;
+      }
+    }
+
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
@@ -91,11 +111,21 @@ export default function HandwritingPracticePage() {
 
     pointerIdRef.current = null;
     drawingRef.current = false;
+    document.body.style.userSelect = originalBodyUserSelectRef.current;
     context.beginPath();
   };
 
   const drawStroke = (event) => {
     if (!drawingRef.current) {
+      return;
+    }
+
+    if (pointerIdRef.current !== null && event.pointerId !== pointerIdRef.current) {
+      return;
+    }
+
+    if (event.buttons === 0) {
+      endDraw(event);
       return;
     }
 
